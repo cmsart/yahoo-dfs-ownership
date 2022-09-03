@@ -2,7 +2,7 @@
 A simple python script to fetch ownership data for past Yahoo Daily Fantasy contests
 
 ## Setup
-You will need Python installed on your machine, as well as the the following Python packages:
+You will need Python installed on your machine, as well as the the following Python packages. Use `pip install [package name]` to download them:
 - numpy
 - requests
 
@@ -30,4 +30,4 @@ Then download the player list csv:
 ## Output
 The script will automatically write the file to the `out` directory of the project.
 
-Since it would take to long to parse every entry for large contests, some players with miniscule ownership percentages won't be found. If a player is not found (or truly wasn't included in any lineups), their ownership will appear as `0.1` in the output file.
+Since it would take too long to parse every entry for large contests, some players with miniscule ownership percentages won't be found. If a player is not found (or truly wasn't included in any lineups), their ownership will appear as `0.1` in the output file.
