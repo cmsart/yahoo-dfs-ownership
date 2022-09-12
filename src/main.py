@@ -35,14 +35,14 @@ lineupsUrl = 'https://dfyql-ro.sports.yahoo.com/v2/contestEntry/{0}'
 # calculate offset step for each iteration to get even distribution across contest
 contestRequest = requests.get(contestUrl)
 contestJson = contestRequest.json()
-maxEntries = contestJson['contests']['result'][0]['entryLimit']
-step = 50 if maxEntries <= 1000 else (int(maxEntries / 20))
+entryCount = contestJson['contests']['result'][0]['entryCount']
+step = 50 if entryCount <= 1000 else (int(entryCount / 20))
 
 playersPopulated = 0
 offset = 0
 
 # use yahoo api to fetch ownership data
-while offset < maxEntries:
+while offset < entryCount:
     # fetch entries for contest, 50 is the max number available per request
     entriesRequest = requests.get(entriesUrl.format(offset, offset + 50))
     entriesJson = entriesRequest.json()
@@ -60,10 +60,12 @@ while offset < maxEntries:
     for lineup in lineups:
         players = lineup['lineupSlotList']
         for player in players:
-            playerId = player['player']['code']
-            if (ownershipDict.get(playerId) == -1):
-                ownershipDict[playerId] = player['playerDraftPercent']
-                playersPopulated += 1
+            # some users may not set their lineup, so make sure its not empty
+            if 'player' in player:
+                playerId = player['player']['code']
+                if (ownershipDict.get(playerId) == -1):
+                    ownershipDict[playerId] = player['playerDraftPercent']
+                    playersPopulated += 1
 
     # get next set of entries
     offset += step
